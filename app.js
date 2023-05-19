@@ -1,18 +1,15 @@
-var createError = require('http-errors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const express = require('express')
 require('dotenv').config()
+const cors = require('cors')
 const app = express()
 const mongoose = require('mongoose')
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const helloWorld = require('./routes/helloWorld')
 
 
-// view engine setup
-
+app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -24,12 +21,18 @@ app.use((req, res, next)=>{
     console.log(req.path)
     next()
 })
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+//routes
+app.use('/api/',helloWorld)
 
 mongoose.connect(process.env.MONGO).then(()=>{
-  app.listen(4000, ()=>{
+  app.listen(process.env.PORT, ()=>{
       console.log('listening on port 4000')
       console.log('connected to db')
   })
