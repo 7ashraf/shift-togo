@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 function App() {
   const [helloWorld, setHelloWorld] = useState(null)
   const fetchHello = async()=>{
-    const response = await fetch('/api')
+    const response = await fetch('https://shift-togo.onrender.com/api')
     try{
     const json = await response.json()
     if(response.ok){
-      setHelloWorld(json)
+      setHelloWorld(json.response)
+      console.log(json)
   }else{
   }
     }catch(error){
@@ -28,7 +29,9 @@ function App() {
   return (
     
     <div className="App">
-      <h1></h1>
+      <h1>
+        <h1>{helloWorld}</h1>
+      </h1>
     </div>
   );
 }
