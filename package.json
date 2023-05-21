@@ -1,6 +1,5 @@
 {
-  "proxy": "http://localhost:4000",
-
+  "proxy": "http://localhost:4000/",
   "name": "shift-togo",
   "verssion": "0.0.0",
   "private": true,

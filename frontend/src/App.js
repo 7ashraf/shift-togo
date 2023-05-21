@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 function App() {
   const [helloWorld, setHelloWorld] = useState(null)
   const fetchHello = async()=>{
-    const response = await fetch('https://shift-togo.onrender.com/api')
+    const response = await fetch('/api/')
     try{
     const json = await response.json()
     if(response.ok){
@@ -30,7 +30,7 @@ function App() {
     
     <div className="App">
       <h1>
-        <h1>{helloWorld}</h1>
+        {helloWorld}
       </h1>
     </div>
   );
