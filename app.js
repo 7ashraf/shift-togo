@@ -7,6 +7,8 @@ const cors = require('cors')
 const app = express()
 const mongoose = require('mongoose')
 const helloWorld = require('./routes/helloWorld')
+const authRouter = require('./routes/auth')
+
 
 
 app.use(cors())
@@ -30,6 +32,7 @@ app.all('*', function(req, res, next) {
 
 //routes
 app.use('/api/',helloWorld)
+app.use('/api/auth/', authRouter)
 
 mongoose.connect(process.env.MONGO).then(()=>{
   app.listen(process.env.PORT, ()=>{
@@ -40,3 +43,4 @@ mongoose.connect(process.env.MONGO).then(()=>{
   console.log(error)
 })
 module.exports = app;
+//TODO: initialize api, add user auth using passport and jwt
