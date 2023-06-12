@@ -8,7 +8,8 @@ const app = express()
 const mongoose = require('mongoose')
 const helloWorld = require('./routes/helloWorld')
 const authRouter = require('./routes/auth')
-const employerRouter = require('./routes/employer')
+const employerRouter = require('./routes/employer');
+const jobListingRouter = require('./routes/jobListing');
 
 
 
@@ -35,6 +36,7 @@ app.all('*', function(req, res, next) {
 app.use('/api/',helloWorld)
 app.use('/api/auth/', authRouter)
 app.use('/api/employer/', employerRouter)
+app.unsubscribe('/api/job-listing/', jobListingRouter)
 
 mongoose.connect(process.env.MONGO).then(()=>{
   app.listen(process.env.PORT, ()=>{
