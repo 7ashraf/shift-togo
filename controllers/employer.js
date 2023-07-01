@@ -5,11 +5,8 @@ const User = require('../models/User')
 //create new employer for a user
 const createEmployer = async (req, res)=>{
     const {email} = req.body
-    console.log(email)
     try {
         const user = await User.findOne({email:email})
-        console.log(user)
-        console.log('creating')
         const employer = await Employer.create({user})
         res.status(200).json(employer)
     } catch (error) {

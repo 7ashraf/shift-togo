@@ -5,8 +5,10 @@ const JobSeeker = require('../models/jobSeeker')
 
 //create new jobSeeker for a user
 const createJobSeeker = async (req, res)=>{
-    const user = getUser()
+    const {email} = req.body
+    console.log(email)
     try {
+        const user = await User.findOne({email:email})
         const jobSeeker = await JobSeeker.create({user})
         res.status(200).json(jobSeeker)
     } catch (error) {
@@ -46,9 +48,10 @@ const deleteJobSeeker = async(req, res)=>{
 const getJobApplications = async(req, res)=>{
     const {email} = req.body
     try{
-        const user = await User.find({email:email })
-        const jobSeeker = await JobSeeker.find({user:user})
-        const jobApplications = await JobApplication.find({jobSeeker:jobSeeker})
+        const user = await User.findOne({email:email })
+        const jobSeeker = await JobSeeker.findOne({user:user}).populate('openApplications')
+        const jobApplications = await jobSeeker.openApplications
+        
         res.status(200).json(jobApplications)
     }catch(error){
         res.status(400).json({error: error.message})
@@ -57,12 +60,14 @@ const getJobApplications = async(req, res)=>{
 
 //create a job submit a job application
 const createJobApplication = async(req, res)=>{
+    //if not exists
     const {email, jobListingId, note} = req.body
     try{
         //get user
-        const user = await User.find({email:email})
+        const user = await User.findOne({email:email})
         //get associated job seeker 
-        const jobSeeker = await JobSeeker.find({user:user})
+        const jobSeeker = await JobSeeker.findOne({user:user})
+        console.log(jobSeeker)
         //get job Listing to apply
         const jobListing = await JobListing.findById(jobListingId)
         //create job application 
@@ -72,12 +77,25 @@ const createJobApplication = async(req, res)=>{
             status: 'applied',
             note: note
         })
-        jobSeeker.openApplications.push(jobApplication)
+        console.log(jobApplication);
+        const jobSeekerId = jobSeeker._id;
+        console.log(`Job Seeker id: ${jobSeekerId}`);
+        //update job seeker to include the application
+        await JobSeeker.findOneAndUpdate(
+            { _id: jobSeeker._id }, 
+            { $push: { openApplications: jobApplication } }
+        );
+        //update the job listing to include te application
+        await JobListing.findOneAndUpdate(
+            { _id: jobListing._id }, 
+            { $push: { applications: jobApplication } }
+        );
+        res.status(200).json(jobApplication)
     }catch(error){
-        res.status(400).jsonA({error:error.message})
+        res.status(400).json({error:error.message})
     }
 }
 
 
 
-module.exports = { createJobSeeker}
+module.exports = { createJobSeeker, updateJobSeeker, deleteJobSeeker, getJobSeeker, createJobApplication, getJobApplications}

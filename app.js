@@ -10,6 +10,7 @@ const helloWorld = require('./routes/helloWorld')
 const authRouter = require('./routes/auth')
 const employerRouter = require('./routes/employer');
 const jobListingRouter = require('./routes/jobListing');
+const jobSeekerRouter = require('./routes/jobSeekerRouter');
 
 
 
@@ -37,6 +38,7 @@ app.use('/api/',helloWorld)
 app.use('/api/auth/', authRouter)
 app.use('/api/employer/', employerRouter)
 app.use('/api/job-listing/', jobListingRouter)
+app.use('/api/job-seeker', jobSeekerRouter)
 
 mongoose.connect(process.env.MONGO).then(()=>{
   app.listen(process.env.PORT, ()=>{
