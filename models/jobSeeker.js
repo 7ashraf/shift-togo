@@ -8,7 +8,7 @@ const jobSeekerSchema = new Schema({
         }
       ],
     openApplications:[{
-        type: Schema.Types.ObjectId, ref: 'JobListing'
+        type: Schema.Types.ObjectId, ref: 'JobApplication'
         }
       ],
     resume:{

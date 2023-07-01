@@ -36,7 +36,7 @@ app.all('*', function(req, res, next) {
 app.use('/api/',helloWorld)
 app.use('/api/auth/', authRouter)
 app.use('/api/employer/', employerRouter)
-app.unsubscribe('/api/job-listing/', jobListingRouter)
+app.use('/api/job-listing/', jobListingRouter)
 
 mongoose.connect(process.env.MONGO).then(()=>{
   app.listen(process.env.PORT, ()=>{

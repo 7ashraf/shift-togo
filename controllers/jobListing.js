@@ -28,7 +28,7 @@ const getJobListing = async(req, res)=>{
 }
 
 const getAllJobListings = async(req, res)=>{
-    const jobListings = await jobListing.find({})
+    const jobListings = await JobListing.find({})
     res.status(200).json(jobListings)
 }
 
@@ -74,4 +74,4 @@ const getJobApplications = async(req, res)=>{
 
     }
 }
-module.exports = {createJobListing}
+module.exports = {createJobListing, getJobListing, updateJobListing, deleteJobListing, getAllJobListings, getJobApplications}

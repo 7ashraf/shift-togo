@@ -24,18 +24,19 @@ const userSchema = new Schema({
     },
     
 })
-userSchema.statics.signup = async function(email, password){
+
+userSchema.statics.signup = async function(firstName, lastName, email, password){
     //validation
     if(!email || !password) throw Error('Fill all fields')
     if(!validator.isEmail(email)) throw Error('incorrect email format')
-    if(!validator.isStrongPassword(password)) throw Error('password not strong')
+    //if(!validator.isStrongPassword(password)) throw Error('password not strong')
     const exists = await this.findOne({email})
     if(exists) throw Error('email already in use')
 
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const user = this.create({email, password: hash})
+    const user = this.create({firstName, lastName, email, password: hash})
     return user
 
 }

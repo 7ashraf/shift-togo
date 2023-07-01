@@ -8,7 +8,7 @@ const jobListingSchema = new Schema({
   requirements: [{ type: String }],
   status: { type: String, enum: ['active', 'closed'] },
   applications: [{ type: Schema.Types.ObjectId, ref: 'JobApplication' }],
-  poster:{type: Schema.Types.ObjectId, ref: 'Employer'},
+  //poster:{type: Schema.Types.ObjectId, ref: 'Employer'},
 });
 
 const JobListing = mongoose.model('JobListing', jobListingSchema);

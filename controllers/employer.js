@@ -7,22 +7,27 @@ const createEmployer = async (req, res)=>{
     const {email} = req.body
     console.log(email)
     try {
-        const user = await User.find({email:email})
+        const user = await User.findOne({email:email})
         console.log(user)
-
+        console.log('creating')
         const employer = await Employer.create({user})
         res.status(200).json(employer)
     } catch (error) {
+        console.log(error.message)
         res.status(400).json({error: error.message})
     }
 }
 
 //get employer
 const getEmployer = async(req, res)=>{
+    console.log('get empl')
     const {id} = req.param
-    const user = getUser()
+    const {email} = req.body
+    //const user = getUser()
+    console.log('get empl')
     try{
-        const employer = await Employer.findById(id)
+        const user = await User.find({email:email})
+        const employer = await Employer.findOne({user: user})
         //or find employee by user 
         res.status(200).json(employer)
     }catch(error){
@@ -48,11 +53,15 @@ const deleteEmployer = async(req, res)=>{
 
 //get employers jobListings
 const getJobListings = async(req, res)=>{
-    const user = getUser()
+    const {email} = req.body
     //find employer by current user or by id
     try{
-    const employer = await Employer.find({user:user})
-    const jobListings = await JobListing.find({employer:employer})
+    const user = await User.findOne({email:email })
+    const employer = await Employer.findOne({user:user}).populate('jobListings')
+    //console.log(employer)
+    //const id = employer._id
+    //console.log(id)
+    const jobListings = employer.jobListings
     res.status(200).json(jobListings)
     }catch(error){
         res.status(400).json({error: error.message})
@@ -65,11 +74,18 @@ const createJobListing = async (req, res)=>{
     const {email} = req.body
     const {title,description,requirements,status} = req.body
     try{
-        const user = User.find({email:email })
-        const employer = await Employer.find({user:user})
-        const jobListing = await JobListing.create({title, description, requirements, status, employer})
+        const user = await User.find({email:email })
+        //consolo.log(user)
+        const poster = await Employer.findOne({user:user})
+        const jobListing = await JobListing.create({title, description, requirements, status})
+        await Employer.findOneAndUpdate(
+            { _id: poster._id }, 
+            { $push: { jobListings: jobListing } }
+        );
+
         res.status(200).json(jobListing)
     }catch(error){
+        console.log(error)
         res.status(400).json({error: error.message})
     }
 }
