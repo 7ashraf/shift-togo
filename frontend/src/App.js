@@ -1,37 +1,43 @@
-import './App.css';
+//import './App.css';
 import { useEffect, useState } from 'react';
-function App() {
-  const [helloWorld, setHelloWorld] = useState(null)
-  const fetchHello = async()=>{
-    const response = await fetch('/api/')
-    try{
-    const json = await response.json()
-    if(response.ok){
-      setHelloWorld(json.response)
-      console.log(json)
-  }else{
-  }
-    }catch(error){
-      console.log(error)
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NavBar from './components/NavBar'
 
-    }
-    
-}
-  useEffect(() => {
-    
-    
-  fetchHello()
-  
-   
-  }, [helloWorld])
-  
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Routes,
+  Link
+} from "react-router-dom";
+function App() {
   
   return (
     
     <div className="App">
-      <h1>
-        {helloWorld}
-      </h1>
+      <BrowserRouter>
+      <NavBar></NavBar>
+     
+        <div className="pages">
+          <Routes>
+            <Route 
+              path="/"
+              element={<Home />}
+            />
+            <Route 
+              path="/login" 
+              element={<Login />} 
+            />
+            <Route 
+              path="/signup" 
+              element={<Signup />} 
+            />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </div>
   );
 }
