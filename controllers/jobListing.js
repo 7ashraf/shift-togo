@@ -28,8 +28,30 @@ const getJobListing = async(req, res)=>{
 }
 
 const getAllJobListings = async(req, res)=>{
-    const jobListings = await JobListing.find({})
-    res.status(200).json(jobListings)
+    try {
+        let perPage = 10
+        let page = req.query.page || 1
+        const jobListings = await JobListing.find({})
+        .populate({
+            path : 'poster',
+            populate : {
+              path : 'user'
+            }
+          })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .exec(); // needs to be sorted by date
+
+        const count = await JobListing.count()
+        const nextPage = parseInt(page) +1;
+        const hasNextPage = nextPage <= Math.ceil(count / perPage)
+        res.status(200).json({jobListings: jobListings, currentPage: page, nextPage: hasNextPage? nextPage: null})
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({"error" : error.message})
+    }
 }
 
 

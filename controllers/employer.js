@@ -72,9 +72,9 @@ const createJobListing = async (req, res)=>{
     const {title,description,requirements,status} = req.body
     try{
         const user = await User.find({email:email })
-        //consolo.log(user)
         const poster = await Employer.findOne({user:user})
-        const jobListing = await JobListing.create({title, description, requirements, status})
+        const jobListing = await JobListing.create({title, description, requirements, status, poster})
+        console.log(poster)
         await Employer.findOneAndUpdate(
             { _id: poster._id }, 
             { $push: { jobListings: jobListing } }
